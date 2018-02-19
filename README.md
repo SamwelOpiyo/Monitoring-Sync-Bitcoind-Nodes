@@ -53,4 +53,5 @@ If InfluxDB is running, you should see an object that contains the _internal dat
 
 ## Running the Program
 
-From the working directory, run `python main.py`
+Create Logs directory by running `mkdir logs` in working directory.
+From the working directory, run `python main.py`.
