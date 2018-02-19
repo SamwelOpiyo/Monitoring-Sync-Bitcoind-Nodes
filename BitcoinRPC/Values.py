@@ -10,6 +10,7 @@ from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 
 import logging
 
+# Logging Settings
 logging.basicConfig()
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
@@ -28,18 +29,21 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
+# Use requests module to read text from webpage
 def get_text(url):
     text = requests.get(url).text
     logger.debug("Scrapped: " + url)
     return text
 
 
+# Change Json text to python dictionary
 def dictify(json_text):
     dict_ = json.loads(json_text)
     logger.debug("Json converted successfully to Python Dict")
     return dict_
 
 
+# Get dict item with key height
 def get_height(latestblock):
     height_ = latestblock["height"]
     logger.debug("Height for latestblock-\
@@ -47,12 +51,14 @@ def get_height(latestblock):
     return height_
 
 
+# Find the difference between two items
 def get_diff(height, latest_block):
     diff = height-latest_block
     logger.debug("Difference between Height and Latest Block: " + str(diff))
     return diff
 
 
+# Get block count from bitcoin rpc
 def get_latest_block(host, port, user, password):
     try:
         rpc_connection = AuthServiceProxy("http://%s:%s@%s:%s" % (user,
@@ -68,6 +74,7 @@ def get_latest_block(host, port, user, password):
         quit()
     except JSONRPCException:
         try:
+            # Use subprocess library to run bash command to get block count
             p = subprocess.Popen(["bitcoin-cli", "getblockcount"],
                                  stdout=subprocess.PIPE)
             output, err = p.communicate()

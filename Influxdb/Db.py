@@ -5,6 +5,8 @@ import os
 from influxdb import InfluxDBClient
 
 import logging
+
+# Logging Settings
 logger = logging.getLogger('Influx Database')
 logger.setLevel(logging.DEBUG)
 
@@ -20,6 +22,7 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
+# create a connection to database
 def connect_db(dbname, host='localhost', port=8086):
     user = 'root'
     password = 'root'
@@ -28,24 +31,28 @@ def connect_db(dbname, host='localhost', port=8086):
     return client
 
 
+# Create database
 def create_db(db_instance, dbname):
     db_instance.create_database(dbname)
     logger.debug("Database created Successfully.")
     return
 
 
+# Delete Database
 def drop_db(db_instance, dbname):
     db_instance.drop_database(dbname)
     logger.debug("Database dropped Successfully.")
     return
 
 
+# Add data to database
 def add_data(db_instance, dbname, data):
     db_instance.write_points(data)
     logger.debug("Data added Successfully.")
     return
 
 
+# Query database
 def query_data(db_instance, dbname, search_string):
     db_instance.query(search_string)
     return
@@ -53,6 +60,7 @@ def query_data(db_instance, dbname, search_string):
 
 def db_main(**kwargs):
     try:
+        # get environment variables
         db_host = kwargs.get('INFLUXDB_HOST', os.environ["INFLUXDB_HOST"])
         db_port = kwargs.get('PORT', os.environ["PORT"])
         db_name = kwargs.get('DATABASE_NAME', os.environ["DATABASE_NAME"])
@@ -62,7 +70,9 @@ def db_main(**kwargs):
         db_port = 8086
         db_name = "default"
 
+    # connect to influxdb
     new_connection = connect_db(db_name, db_host, db_port)
+    # Create database
     create_db(new_connection, db_name)
     logger.debug("Database " + db_name + " created.")
     return

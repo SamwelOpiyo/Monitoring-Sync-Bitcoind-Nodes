@@ -14,6 +14,8 @@ from BitcoinRPC.Values import (get_text,
 
 import logging
 
+# Set logging settings
+
 logging.basicConfig()
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
@@ -34,6 +36,7 @@ logger.addHandler(fh)
 
 def rpc_main(**kwargs):
     try:
+        # get environment variables
         rpc_host = kwargs.get('RPC_HOST', os.environ["RPC_HOST"])
         rpc_port = kwargs.get('RPC_PORT', os.environ["RPC_PORT"])
         rpc_user = kwargs.get('RPC_USER', os.environ["RPC_USER"])
@@ -43,6 +46,7 @@ def rpc_main(**kwargs):
         db_name = kwargs.get('DATABASE_NAME', os.environ["DATABASE_NAME"])
 
     except KeyError:
+        # set to default if not provided
         rpc_host = "127.0.0.1"
         rpc_port = 8332
         rpc_user = None
@@ -51,9 +55,12 @@ def rpc_main(**kwargs):
         db_host = 'localhost'
         db_port = 8086
 
+    # create a connection to influxdb
     new_connection = connect_db(db_name, db_host, db_port)
+    # create database
     create_db(new_connection, db_name)
 
+    # Building data to be stored in database
     data = [
         {
             "measurement": "cpu_load_short",
@@ -66,19 +73,25 @@ def rpc_main(**kwargs):
         }
     ]
 
+    # Get json text from url
     text_ = get_text("https://blockchain.info/latestblock")
+    # Convert json text to python dictionary
     dict_ = dictify(text_)
+    # get height from dictionary
     data[0]["fields"]["Bitcoin block number"] = get_height(dict_)
 
+    # get block count from bitcoin rpc
     data[0]["fields"]["Block Count"] = get_latest_block(rpc_host,
                                                         rpc_port,
                                                         rpc_user,
                                                         rpc_password)
 
+    # Find difference between height and block count
     data[0]["fields"]["Difference"] = get_diff(
         data[0]["fields"]["Bitcoin block number"],
         data[0]["fields"]["Block Count"])
 
+    # Save data to database
     try:
         add_data(new_connection, db_name, data)
         logger.debug(data)
