@@ -12,12 +12,16 @@ fh = logging.FileHandler('logs/influxdb.log')
 fh.setLevel(logging.DEBUG)
 
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s - \
+                               %(name)s - \
+                               %(levelname)s - \
+                               %(message)s')
 
 fh.setFormatter(formatter)
 
 # add the handlers to logger
 logger.addHandler(fh)
+
 
 def connect_db(dbname, host='localhost', port=8086):
     user = 'root'
@@ -32,15 +36,18 @@ def create_db(db_instance, dbname):
     logger.debug("Database created Successfully.")
     return
 
+
 def drop_db(db_instance, dbname):
     db_instance.drop_database(dbname)
     logger.debug("Database dropped Successfully.")
     return
 
+
 def add_data(db_instance, dbname, data):
     db_instance.write_points(data)
     logger.debug("Data added Successfully.")
     return
+
 
 def query_data(db_instance, dbname, search_string):
     db_instance.query(search_string)

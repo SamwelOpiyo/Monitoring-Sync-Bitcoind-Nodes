@@ -6,7 +6,11 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from Influxdb.Db import connect_db, create_db, drop_db, add_data, query_data
 
-from BitcoinRPC.Values import get_text, dictify, get_height, get_diff, get_latest_block
+from BitcoinRPC.Values import (get_text,
+                               dictify,
+                               get_height,
+                               get_diff,
+                               get_latest_block)
 
 import logging
 
@@ -20,12 +24,16 @@ fh = logging.FileHandler('logs/main.log')
 fh.setLevel(logging.DEBUG)
 
 # create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s - \
+                               %(name)s - \
+                               %(levelname)s - \
+                               %(message)s')
 
 fh.setFormatter(formatter)
 
 # add the handlers to logger
 logger.addHandler(fh)
+
 
 def rpc_main(**kwargs):
     try:
@@ -36,7 +44,7 @@ def rpc_main(**kwargs):
         db_host = kwargs.get('INFLUXDB_HOST', os.environ["INFLUXDB_HOST"])
         db_port = kwargs.get('PORT', os.environ["PORT"])
         db_name = kwargs.get('DATABASE_NAME', os.environ["DATABASE_NAME"])
-        
+
     except KeyError:
         rpc_host = "127.0.0.1"
         rpc_port = 8332
@@ -62,7 +70,7 @@ def rpc_main(**kwargs):
     ]
 
     text_ = get_text("https://blockchain.info/latestblock")
-    dict_ = dictify(text_) 
+    dict_ = dictify(text_)
     data[0]["fields"]["Bitcoin block number"] = get_height(dict_)
 
     data[0]["fields"]["Block Count"] = get_latest_block(rpc_host,
@@ -70,8 +78,9 @@ def rpc_main(**kwargs):
                                                         rpc_user,
                                                         rpc_password)
 
-    data[0]["fields"]["Difference"] = get_diff(data[0]["fields"]["Bitcoin block number"],
-                                                    data[0]["fields"]["Block Count"])
+    data[0]["fields"]["Difference"] = get_diff(
+        data[0]["fields"]["Bitcoin block number"],
+        data[0]["fields"]["Block Count"])
 
     try:
         add_data(new_connection, db_name, data)
@@ -79,8 +88,7 @@ def rpc_main(**kwargs):
     except Exception as err:
         logger.critical(err)
         quit()
-    return data      
-
+    return data
 
 
 if __name__ == '__main__':
