@@ -1,0 +1,14 @@
+APScheduler==2.1.2
+certifi==2018.1.18
+chardet==3.0.4
+funcsigs==1.0.2
+futures==3.2.0
+idna==2.6
+influxdb==5.0.0
+python-bitcoinrpc==1.0
+python-dateutil==2.6.1
+pytz==2018.3
+requests==2.18.4
+six==1.11.0
+tzlocal==1.5.1
+urllib3==1.22
