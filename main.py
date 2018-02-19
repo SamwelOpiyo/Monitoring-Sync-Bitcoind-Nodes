@@ -6,6 +6,8 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 from Influxdb.Db import connect_db, create_db, drop_db, add_data, query_data
 
+from BitcoinRPC.Values import get_text, dictify, get_height, get_diff, get_latest_block
+
 import logging
 
 logging.basicConfig()
