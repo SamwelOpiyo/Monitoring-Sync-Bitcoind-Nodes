@@ -55,4 +55,22 @@ If InfluxDB is running, you should see an object that contains the _internal dat
 
 Create Logs directory by running `mkdir logs` in working directory.
 
+Set the following environment variables.
+
+`export RPC_HOST=<host(localhost)>`
+
+`export RPC_PORT=<port(8332)>`
+
+`export RPC_USER=<user(root)>`
+
+`export RPC_PASSWORD=<password>`
+
+`export INFLUXDB_HOST=<host(localhost)>`
+
+`export PORT=<port(8086)>`
+
+`export DATABASE_NAME=<dbname>`
+
+`export CALL_TIMEOUT=<timeout(600)>`
+
 From the working directory, run `python main.py`.
