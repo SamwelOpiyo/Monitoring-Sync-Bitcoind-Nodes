@@ -55,7 +55,7 @@ If InfluxDB is running, you should see an object that contains the _internal dat
 
 Create Logs directory by running `mkdir logs` in working directory.
 
-Set the following environment variables.
+Set the following environment variables if configured else DO NOT.
 
 `export RPC_HOST=<host(localhost)>`
 
